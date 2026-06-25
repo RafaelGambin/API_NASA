@@ -18,9 +18,8 @@ def conection_db():
 
     if engine:    
         with engine.connect() as conn:
-            print("Conectado ao banco chefe!")
+            print("Connected to the DB")
     else:
         print("Error to conected to database!")
 
-
-conection_db()
+    return
