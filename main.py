@@ -23,6 +23,7 @@ todo = api.model('AstronomyPictureOfTheDay', {
 
 @ns.route(f"/teste", methods=["GET"])
 class GetAstronomyPictureOfTheDay(Resource):
+    ns.marshal_with(todo)
     def get(self):
 
         data = requests.get(f"https://api.nasa.gov/planetary/apod?api_key={api_key}")
