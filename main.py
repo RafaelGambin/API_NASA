@@ -1,35 +1,36 @@
 import os
+import uvicorn
 import requests
-from flask import Flask
+
+from fastapi import FastAPI
 from dotenv import load_dotenv
-from flask_restx import Api, Resource, fields
-from src.infra.database.connection import conection_db
 
 load_dotenv()
 
+app = FastAPI()
 
 api_key = os.getenv("API_KEY")
 
-app = Flask(__name__)
+@app.get(f"/APOD")
+def apod():
 
-api = Api(app, version='1.0', title='NASA API', description='This is The NASA API')
+    data = requests.get(f"https://api.nasa.gov/planetary/apod?api_key={api_key}")
 
-ns = api.namespace('astronomy_picture_of_the_day', description='Astronomy Picture of the Day operations')
+    url = data.json()['url']
+    print(url)
 
+    date = data.json()['date']
+    print(date)
 
-todo = api.model('AstronomyPictureOfTheDay', {
-    'token': fields.String(required=True, description='The token for the API request'),
-})
+    explanation = data.json()['explanation']
+    print(explanation)
 
-@ns.route(f"/teste", methods=["GET"])
-class GetAstronomyPictureOfTheDay(Resource):
-    ns.marshal_with(todo)
-    def get(self):
-
-        data = requests.get(f"https://api.nasa.gov/planetary/apod?api_key={api_key}")
+    hdurl = data.json()['hdurl']    
+    print(hdurl)
 
 
-        return data.json(), 200
+    return data.json()
+
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    uvicorn.run(app, host='0.0.0.0', port=5000, reload=True)
