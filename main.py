@@ -11,7 +11,7 @@ app = FastAPI()
 
 api_key = os.getenv("API_KEY")
 
-@app.get(f"/APOD")
+@app.get("/APOD")
 def apod():
 
     data = requests.get(f"https://api.nasa.gov/planetary/apod?api_key={api_key}")
@@ -32,5 +32,12 @@ def apod():
     return data.json()
 
 
+@app.get("/NEO")
+def neo():
+
+    data = requests.get(f"https://api.nasa.gov/neo/rest/v1/feed?api_key={api_key}")
+
+    return data.json()
+
 if __name__ == '__main__':
-    uvicorn.run(app, host='0.0.0.0', port=5000, reload=True)
+    uvicorn.run(app, host='0.0.0.0', port=5000)
